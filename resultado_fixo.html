@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍫 Amigo Secreto Ovos de Páscoa - Resultado Fixo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(rgba(46,27,22,0.92),rgba(77,52,46,0.96)), url('chocolate.avif') center top/cover no-repeat fixed;
+      color: #FFD700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: rgba(46,27,22,0.97);
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 40px #4E342E99;
+      max-width: 420px;
+      width: 95%;
+      text-align: center;
+    }
+    h1 {
+      color: #FFD700;
+      margin-bottom: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0 0 0;
+      background: rgba(141,110,99,0.13);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 8px;
+      color: #EFEBE9;
+    }
+    th {
+      background: #4E342E;
+      color: #FFD700;
+    }
+    tr:nth-child(even) {
+      background: rgba(77,52,46,0.18);
+    }
+    .link {
+      display: block;
+      margin: 8px 0 0 0;
+      color: #FFD700;
+      font-size: 0.98em;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🍫 Amigo Secreto Ovos de Páscoa</h1>
+    <div style="margin-bottom:18px;color:#EFEBE9;">Cada pessoa já tem seu amigo fixo. Compartilhe o link individual com cada participante!</div>
+    <table>
+      <tr><th>Nome</th><th>Vai tirar</th><th>Link individual</th></tr>
+      <tr><td>Anna Paula</td><td>Gabriel</td><td><span class="link">?p=Anna%20Paula</span></td></tr>
+      <tr><td>Benjamin</td><td>Isabela Fá</td><td><span class="link">?p=Benjamin</span></td></tr>
+      <tr><td>Eloá</td><td>Samuel</td><td><span class="link">?p=Eloá</span></td></tr>
+      <tr><td>Fábia</td><td>Levi</td><td><span class="link">?p=Fábia</span></td></tr>
+      <tr><td>Gabriel</td><td>Maxwell</td><td><span class="link">?p=Gabriel</span></td></tr>
+      <tr><td>Isabela (namorada Benjamin)</td><td>Anna Paula</td><td><span class="link">?p=Isabela%20(namorada%20Benjamin)</span></td></tr>
+      <tr><td>Isabela Fá</td><td>Richard</td><td><span class="link">?p=Isabela%20Fá</span></td></tr>
+      <tr><td>Judah</td><td>Yasmin</td><td><span class="link">?p=Judah</span></td></tr>
+      <tr><td>Levi</td><td>Vinólia</td><td><span class="link">?p=Levi</span></td></tr>
+      <tr><td>Maxwell</td><td>Fábia</td><td><span class="link">?p=Maxwell</span></td></tr>
+      <tr><td>Paula</td><td>Eloá</td><td><span class="link">?p=Paula</span></td></tr>
+      <tr><td>Richard</td><td>Isabela (namorada Benjamin)</td><td><span class="link">?p=Richard</span></td></tr>
+      <tr><td>Samuel</td><td>Benjamin</td><td><span class="link">?p=Samuel</span></td></tr>
+      <tr><td>Vinólia</td><td>Paula</td><td><span class="link">?p=Vinólia</span></td></tr>
+      <tr><td>Yasmin</td><td>Judah</td><td><span class="link">?p=Yasmin</span></td></tr>
+    </table>
+    <div style="margin-top:24px;color:#FFD700;font-size:1.1em;">Acesse o link: <b>pascao-chocolate.netlify.app/resultado_fixo.html?p=Nome</b></div>
+    <div style="color:#EFEBE9;font-size:0.98em;">(Substitua <b>Nome</b> pelo nome exato do participante, igual na tabela)</div>
+  </div>
+  <script>
+    // Lista fixa de resultados
+    const resultados = {
+      "Anna Paula": "Gabriel",
+      "Benjamin": "Isabela Fá",
+      "Eloá": "Samuel",
+      "Fábia": "Levi",
+      "Gabriel": "Maxwell",
+      "Isabela (namorada Benjamin)": "Anna Paula",
+      "Isabela Fá": "Richard",
+      "Judah": "Yasmin",
+      "Levi": "Vinólia",
+      "Maxwell": "Fábia",
+      "Paula": "Eloá",
+      "Richard": "Isabela (namorada Benjamin)",
+      "Samuel": "Benjamin",
+      "Vinólia": "Paula",
+      "Yasmin": "Judah"
+    };
+    // Pega o nome do participante da URL
+    const params = new URLSearchParams(window.location.search);
+    const nome = params.get('p');
+    if (nome && resultados[nome]) {
+      document.querySelector('table').style.display = 'none';
+      document.querySelector('.container').innerHTML += `<div style='margin-top:32px;'><h2 style='color:#FFD700;'>Olá, <span style='color:#EFEBE9;'>${nome}</span>!</h2><div style='margin:18px 0 0 0;font-size:1.25em;color:#EFEBE9;'>Seu amigo secreto é:</div><div style='font-size:2em;margin:18px 0 0 0;color:#FFD700;font-weight:bold;'>${resultados[nome]}</div></div>`;
+    }
+  </script>
+</body>
+</html>
