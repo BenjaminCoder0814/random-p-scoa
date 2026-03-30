@@ -1,583 +1,243 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Amigo Ovo de Páscoa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --choco-dark: #3E2723;
-      --choco-milk: #5D4037;
-      --choco-light: #8D6E63;
-      --cream: #D7CCC8;
-      --gold: #FFD700;
-      --radius: 18px;
-      --shadow: 0 8px 32px 0 rgba(62,39,35,0.25);
-      --shadow-card: 0 4px 24px 0 rgba(62,39,35,0.18);
-      --glass: rgba(61, 39, 35, 0.78);
-      --transition: 0.35s cubic-bezier(.4,1.4,.6,1);
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: linear-gradient(135deg, var(--choco-dark) 0%, var(--choco-milk) 60%, var(--choco-light) 100%);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 90px;
-      z-index: 1;
-      background: url('https://i.imgur.com/0Q9QZpA.png') repeat-x;
-      background-size: contain;
-      opacity: 0.7;
-      pointer-events: none;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: url('https://www.transparenttextures.com/patterns/food.png');
-      opacity: 0.13;
-      pointer-events: none;
-    }
-    .container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 0 8px 32px 8px;
-      position: relative;
-      z-index: 2;
-    }
-    .top {
-      margin-top: 44px;
-      text-align: center;
-      color: var(--cream);
-      text-shadow: 0 2px 8px rgba(62,39,35,0.18);
-      user-select: none;
-    }
-    .top .emoji {
-      font-size: 2.5rem;
-      filter: drop-shadow(0 2px 4px #3E2723aa);
-      margin-bottom: 6px;
-      display: block;
-      animation: dropIn 1s cubic-bezier(.4,1.4,.6,1);
-    }
-    @keyframes dropIn {
-      0% { transform: translateY(-40px) scale(0.7); opacity: 0; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
-    }
-    .top .title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      color: var(--gold);
-      text-shadow: 0 2px 12px #3E2723cc;
-      margin-bottom: 4px;
-      margin-top: 0;
-      line-height: 1.1;
-    }
-    .top .subtitle {
-      font-size: 1.08rem;
-      font-weight: 400;
-      color: var(--cream);
-      opacity: 0.92;
-      margin-bottom: 0;
-      margin-top: 0;
-      letter-spacing: 0.01em;
-    }
-    .adm-btn {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      background: none;
-      border: none;
-      color: var(--gold);
-      font-size: 1.1rem;
-      font-weight: 600;
-      opacity: 0.7;
-      cursor: pointer;
-      z-index: 10;
-      transition: opacity 0.2s;
-      text-shadow: 0 1px 6px #3E2723cc;
-    }
-    .adm-btn:hover { opacity: 1; }
-    .card {
-      margin-top: 32px;
-      background: linear-gradient(120deg, var(--glass) 80%, var(--choco-light) 100%);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      padding: 28px 18px 22px 18px;
-      max-width: 370px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      backdrop-filter: blur(2.5px);
-      border: 1.5px solid rgba(255,255,255,0.07);
-      position: relative;
-      animation: fadeInCard 0.8s var(--transition);
-    }
-    @keyframes fadeInCard {
-      0% { opacity: 0; transform: scale(0.95) translateY(30px);}
-      100% { opacity: 1; transform: scale(1) translateY(0);}
-    }
-    .input-group {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      margin-bottom: 18px;
-    }
-    select {
-      font-size: 1.1rem;
-      padding: 14px 16px;
-      border-radius: var(--radius);
-      border: none;
-      outline: none;
-      background: rgba(255,255,255,0.13);
-      color: var(--cream);
-      box-shadow: 0 2px 8px 0 rgba(62,39,35,0.10);
-      margin-bottom: 10px;
-      transition: box-shadow 0.25s, border 0.25s;
-      font-family: inherit;
-      letter-spacing: 0.01em;
-      border: 2px solid transparent;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg width='16' height='10' viewBox='0 0 16 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L8 8L14 2' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1.2em;
-    }
-    select:focus {
-      border: 2px solid var(--gold);
-      box-shadow: 0 0 0 3px #FFD70044, 0 2px 8px 0 rgba(62,39,35,0.13);
-      background: rgba(255,255,255,0.18);
-    }
-    .btn-choco {
-      font-size: 1.13rem;
-      font-weight: 600;
-      padding: 13px 0;
-      border-radius: var(--radius);
-      background: linear-gradient(90deg, #5D4037 60%, #8D6E63 100%);
-      color: var(--gold);
-      border: none;
-      box-shadow: 0 2px 12px 0 #3E2723aa, 0 0 0 0 var(--gold);
-      cursor: pointer;
-      transition: 
-        box-shadow 0.18s, 
-        transform 0.18s, 
-        background 0.18s;
-      position: relative;
-      overflow: hidden;
-      outline: none;
-      margin-bottom: 2px;
-      letter-spacing: 0.01em;
-      text-shadow: 0 1px 6px #3E2723cc;
-      z-index: 1;
-    }
-    .btn-choco:active {
-      transform: scale(0.97);
-      box-shadow: 0 0 16px 2px var(--gold), 0 2px 12px 0 #3E2723aa;
-      background: linear-gradient(90deg, #8D6E63 60%, #FFD700 100%);
-    }
-    .btn-choco::after {
-      content: '';
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 0; height: 0;
-      background: radial-gradient(circle, #FFD70088 0%, #FFD70000 80%);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      pointer-events: none;
-      transition: width 0.4s, height 0.4s, opacity 0.4s;
-      z-index: 0;
-    }
-    .btn-choco.glow::after {
-      width: 180%;
-      height: 180%;
-      opacity: 0.18;
-      transition: width 0.25s, height 0.25s, opacity 0.25s;
-    }
-    .result {
-      width: 100%;
-      margin-top: 22px;
-      text-align: center;
-      opacity: 0;
-      transform: scale(0.95) translateY(20px);
-      pointer-events: none;
-      transition: opacity 0.5s var(--transition), transform 0.5s var(--transition);
-      will-change: opacity, transform;
-    }
-    .result.visible {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: auto;
-      animation: revealResult 0.7s var(--transition);
-    }
-    @keyframes revealResult {
-      0% { opacity: 0; transform: scale(0.8) translateY(30px);}
-      100% { opacity: 1; transform: scale(1) translateY(0);}
-    }
-    .result .label {
-      font-size: 1.15rem;
-      color: var(--cream);
-      margin-bottom: 6px;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      text-shadow: 0 1px 6px #3E2723cc;
-    }
-    .result .name {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      color: var(--gold);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 12px #3E2723cc;
-      margin-top: 2px;
-      margin-bottom: 0;
-      animation: goldShine 2.2s linear infinite alternate;
-    }
-    @keyframes goldShine {
-      0% { filter: brightness(1) drop-shadow(0 0 0 #FFD700); }
-      100% { filter: brightness(1.13) drop-shadow(0 0 8px #FFD70088); }
-    }
-    .input-group select:disabled,
-    .btn-choco:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      filter: grayscale(0.2);
-    }
-    /* Modal ADM */
-    .modal-bg {
-      position: fixed;
-      inset: 0;
-      background: rgba(62,39,35,0.75);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeInModal 0.3s;
-    }
-    @keyframes fadeInModal {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    .modal {
-      background: linear-gradient(120deg, var(--glass) 80%, var(--choco-light) 100%);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      padding: 24px 18px 18px 18px;
-      min-width: 270px;
-      max-width: 95vw;
-      color: var(--cream);
-      position: relative;
-      animation: fadeInCard 0.5s;
-    }
-    .modal h2 {
-      font-family: 'Playfair Display', serif;
-      color: var(--gold);
-      font-size: 1.3rem;
-      margin: 0 0 12px 0;
-      text-align: center;
-      letter-spacing: 0.01em;
-    }
-    .modal .close {
-      position: absolute;
-      top: 10px; right: 14px;
-      background: none;
-      border: none;
-      color: var(--gold);
-      font-size: 1.3rem;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    .modal .close:hover { opacity: 1; }
-    .adm-list {
-      margin: 0; padding: 0;
-      list-style: none;
-      font-size: 1.08rem;
-    }
-    .adm-list li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-    .adm-list li:last-child { border-bottom: none; }
-    .adm-status {
-      font-size: 1.1em;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-    .adm-status.done { color: #FFD700; }
-    .adm-status.pending { color: #D7CCC8; }
-    .modal input[type='password'] {
-      width: 100%;
-      font-size: 1.1rem;
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      border: none;
-      outline: none;
-      background: rgba(255,255,255,0.13);
-      color: var(--cream);
-      margin-bottom: 12px;
-      border: 2px solid transparent;
-      transition: border 0.2s;
-    }
-    .modal input[type='password']:focus {
-      border: 2px solid var(--gold);
-    }
-    .modal .btn-choco {
-      width: 100%;
-      margin-top: 6px;
-    }
-    @media (max-width: 480px) {
-      .card { padding: 22px 6vw 18px 6vw; }
-      .top { margin-top: 28px; }
-      .result .name { font-size: 1.5rem; }
-      .top .title { font-size: 1.4rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍫 Amigo Ovo Premium</title>
+
+<style>
+:root{
+  --choco-dark:#2E1B16;
+  --choco:#4E342E;
+  --choco-light:#8D6E63;
+  --cream:#EFEBE9;
+  --gold:#FFD700;
+}
+
+body{
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #4E342E, #2E1B16);
+  color:var(--cream);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.container{
+  width:95%;
+  max-width:420px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+
+h1{
+  text-align:center;
+  color:var(--gold);
+}
+
+.sub{
+  text-align:center;
+  margin-bottom:20px;
+  opacity:0.8;
+}
+
+.lista{
+  max-height:250px;
+  overflow:auto;
+}
+
+.nome{
+  padding:12px;
+  margin:6px 0;
+  border-radius:12px;
+  background: rgba(255,255,255,0.05);
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nome:hover{
+  background: rgba(255,215,0,0.2);
+  transform:scale(1.02);
+}
+
+.selected{
+  background: linear-gradient(45deg,var(--gold),#ffea70);
+  color:#000;
+  font-weight:bold;
+  box-shadow:0 0 15px var(--gold);
+}
+
+button{
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  border:none;
+  border-radius:15px;
+  background: linear-gradient(45deg,#5D4037,#3E2723);
+  color:var(--gold);
+  font-size:18px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px var(--gold);
+}
+
+.result{
+  margin-top:20px;
+  text-align:center;
+  font-size:20px;
+}
+
+.admin{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:14px;
+  cursor:pointer;
+  color:var(--gold);
+}
+
+</style>
 </head>
+
 <body>
-  <button class="adm-btn" id="admBtn" title="Modo ADM">Modo ADM</button>
-  <div class="container">
-    <div class="top">
-      <span class="emoji">🍫</span>
-      <h1 class="title">Amigo Ovo de Páscoa</h1>
-      <p class="subtitle">Descubra quem você vai presentear</p>
-    </div>
-    <div class="card">
-      <form id="drawForm" autocomplete="off">
-        <div class="input-group">
-          <select id="nameSelect" required>
-            <option value="">Selecione seu nome</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-choco" id="drawBtn">Sortear 🍫</button>
-      </form>
-      <div class="result" id="resultBox">
-        <div class="label">🎁 Você tirou:</div>
-        <div class="name" id="resultName"></div>
-      </div>
-    </div>
-  </div>
-  <div id="modalRoot"></div>
-  <script>
-    // PARTICIPANTES (edite conforme necessário)
-    const participantes = [
-      "Ana", "Bruno", "Carla", "Daniel", "Eduarda", "Felipe", "Gabriela", "Henrique"
-    ];
-    // RESTRIÇÕES FAMILIARES
-    const restricoes = {
-      "Ana": ["Bruno"],
-      "Bruno": ["Ana"],
-      "Carla": ["Daniel"],
-      "Daniel": ["Carla"],
-      // Adicione mais restrições conforme necessário
+
+<div class="container">
+
+<div class="admin" onclick="abrirADM()">Modo ADM</div>
+
+<h1>🍫 Amigo Ovo</h1>
+<div class="sub">Escolha seu nome</div>
+
+<div class="lista" id="lista"></div>
+
+<button onclick="sortear()">Sortear 🍫</button>
+
+<div class="result" id="resultado"></div>
+
+</div>
+
+<script>
+
+const participantes = [
+"Anna Paula","Benjamin","Eloá","Fábia","Gabriel","Isabela (namorada Benjamin)",
+"Isabela Fá","Judah","Levi","Maxwell","Paula","Richard","Samuel","Vinólia","Yasmin"
+];
+
+// RESTRIÇÕES (famílias)
+const restricoes = {
+"Richard":["Anna Paula","Benjamin","Judah","Levi"],
+"Anna Paula":["Richard","Benjamin","Judah","Levi"],
+"Benjamin":["Richard","Anna Paula","Judah","Levi","Isabela (namorada Benjamin)"],
+"Judah":["Richard","Anna Paula","Benjamin","Levi"],
+"Levi":["Richard","Anna Paula","Benjamin","Judah"],
+
+"Paula":["Samuel","Maxwell","Yasmin"],
+"Samuel":["Paula","Maxwell","Yasmin"],
+"Maxwell":["Paula","Samuel","Yasmin"],
+"Yasmin":["Paula","Samuel","Maxwell"],
+
+"Vinólia":[],
+
+"Fábia":["Gabriel","Eloá","Isabela Fá"],
+"Gabriel":["Fábia","Eloá","Isabela Fá"],
+"Eloá":["Fábia","Gabriel","Isabela Fá"],
+"Isabela Fá":["Fábia","Gabriel","Eloá"],
+
+"Isabela (namorada Benjamin)": ["Benjamin"]
+};
+
+let selecionado = null;
+let sorteioFinal = JSON.parse(localStorage.getItem("sorteio")) || gerarSorteio();
+let jaSortearam = JSON.parse(localStorage.getItem("jaSortearam")) || [];
+
+function render(){
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  participantes.sort().forEach(nome=>{
+    const div = document.createElement("div");
+    div.className = "nome";
+    div.innerText = nome;
+
+    div.onclick = ()=>{
+      selecionado = nome;
+      document.querySelectorAll(".nome").forEach(n=>n.classList.remove("selected"));
+      div.classList.add("selected");
     };
-    // SENHA ADM
-    const ADM_PASS = "1234";
 
-    // --- STORAGE ---
-    function getStorage() {
-      let data = localStorage.getItem("amigoOvoPascoa");
-      if (!data) return {};
-      try { return JSON.parse(data); } catch { return {}; }
-    }
-    function setStorage(obj) {
-      localStorage.setItem("amigoOvoPascoa", JSON.stringify(obj));
-    }
-    function resetStorage() {
-      localStorage.removeItem("amigoOvoPascoa");
-    }
+    lista.appendChild(div);
+  });
+}
 
-    // --- SORTEIO ---
-    function gerarSorteio() {
-      // Gera sorteio válido e salva no storage
-      let tentativas = 0, maxTentativas = 1000;
-      let sorteio = null;
-      while (tentativas < maxTentativas) {
-        let lista = participantes.slice();
-        for (let i = lista.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [lista[i], lista[j]] = [lista[j], lista[i]];
-        }
-        let pares = {};
-        let usados = new Set();
-        let ok = true;
-        for (let p of participantes) {
-          let opcoes = lista.filter(n => n !== p && !usados.has(n) && !(restricoes[p]||[]).includes(n));
-          if (opcoes.length === 0) { ok = false; break; }
-          let escolhido = opcoes[0];
-          pares[p] = escolhido;
-          usados.add(escolhido);
-        }
-        if (ok) { sorteio = pares; break; }
-        tentativas++;
-      }
-      return sorteio;
+function gerarSorteio(){
+  let tentativas=0;
+
+  while(tentativas<2000){
+    let disponiveis=[...participantes];
+    let resultado={};
+    let valido=true;
+
+    for(let pessoa of participantes){
+      let opcoes = disponiveis.filter(p=>
+        p!==pessoa && !(restricoes[pessoa]||[]).includes(p)
+      );
+
+      if(opcoes.length===0){valido=false;break;}
+
+      let escolhido = opcoes[Math.floor(Math.random()*opcoes.length)];
+      resultado[pessoa]=escolhido;
+      disponiveis = disponiveis.filter(p=>p!==escolhido);
     }
 
-    // --- PARTICIPAÇÃO ---
-    function getStatus() {
-      let data = getStorage();
-      let status = {};
-      for (let p of participantes) {
-        status[p] = (data.participantes && data.participantes[p]) ? true : false;
-      }
-      return status;
-    }
+    if(valido) return resultado;
+    tentativas++;
+  }
 
-    // --- UI ---
-    const select = document.getElementById('nameSelect');
-    const btn = document.getElementById('drawBtn');
-    const resultBox = document.getElementById('resultBox');
-    const resultName = document.getElementById('resultName');
-    const form = document.getElementById('drawForm');
-    const admBtn = document.getElementById('admBtn');
-    const modalRoot = document.getElementById('modalRoot');
+  alert("Erro no sorteio");
+}
 
-    // Preenche select
-    function fillSelect() {
-      select.innerHTML = '<option value="">Selecione seu nome</option>';
-      participantes.slice().sort((a,b)=>a.localeCompare(b)).forEach(nome => {
-        select.innerHTML += `<option value="${nome}">${nome}</option>`;
-      });
-    }
-    fillSelect();
+function sortear(){
+  if(!selecionado) return alert("Selecione seu nome");
 
-    // Microanimação botão
-    btn.addEventListener('click', e => {
-      btn.classList.add('glow');
-      setTimeout(() => btn.classList.remove('glow'), 350);
-    });
+  if(jaSortearam.includes(selecionado)){
+    return alert("Você já sorteou!");
+  }
 
-    // Sorteio
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nome = select.value;
-      if (!nome) return;
-      let data = getStorage();
-      if (!data.sorteio) {
-        // Gera sorteio e salva
-        let sorteio = gerarSorteio();
-        if (!sorteio) {
-          resultName.textContent = "Erro ao sortear. Tente novamente.";
-          resultBox.classList.add('visible');
-          return;
-        }
-        data.sorteio = sorteio;
-        data.participantes = {};
-        setStorage(data);
-      }
-      if (data.participantes && data.participantes[nome]) {
-        resultName.textContent = "Você já realizou o sorteio!";
-        resultBox.classList.add('visible');
-        return;
-      }
-      // Mostra resultado
-      btn.disabled = true;
-      select.disabled = true;
-      resultBox.classList.remove('visible');
-      setTimeout(() => {
-        resultName.textContent = data.sorteio[nome];
-        resultBox.classList.add('visible');
-        // Marca como já sorteou
-        data.participantes = data.participantes || {};
-        data.participantes[nome] = true;
-        setStorage(data);
-        btn.disabled = false;
-        select.disabled = false;
-      }, 420);
-    });
+  const resultado = sorteioFinal[selecionado];
 
-    // Modal ADM
-    admBtn.addEventListener('click', () => {
-      showAdmLogin();
-    });
+  document.getElementById("resultado").innerHTML =
+    `🎁 Você tirou:<br><span style="color:gold;font-size:26px">${resultado}</span>`;
 
-    function showAdmLogin() {
-      modalRoot.innerHTML = `
-        <div class="modal-bg">
-          <div class="modal">
-            <button class="close" title="Fechar">&times;</button>
-            <h2>Modo ADM</h2>
-            <form id="admLoginForm">
-              <input type="password" id="admPass" placeholder="Senha" autocomplete="off" required>
-              <button class="btn-choco" type="submit">Entrar</button>
-            </form>
-          </div>
-        </div>
-      `;
-      document.querySelector('.modal .close').onclick = closeModal;
-      document.getElementById('admLoginForm').onsubmit = function(e) {
-        e.preventDefault();
-        const pass = document.getElementById('admPass').value;
-        if (pass === ADM_PASS) {
-          showAdmPanel();
-        } else {
-          document.getElementById('admPass').value = '';
-          document.getElementById('admPass').placeholder = 'Senha incorreta!';
-        }
-      };
-    }
-    function showAdmPanel() {
-      let status = getStatus();
-      modalRoot.innerHTML = `
-        <div class="modal-bg">
-          <div class="modal">
-            <button class="close" title="Fechar">&times;</button>
-            <h2>Controle de Participação</h2>
-            <ul class="adm-list">
-              ${participantes.map(nome => `
-                <li>
-                  <span>${nome}</span>
-                  <span class="adm-status ${status[nome] ? 'done' : 'pending'}">
-                    ${status[nome] ? '✅ Já sorteou' : '⏳ Pendente'}
-                  </span>
-                </li>
-              `).join('')}
-            </ul>
-            <button class="btn-choco" id="resetBtn" style="margin-top:18px;font-size:0.98em;">Resetar Sorteio</button>
-          </div>
-        </div>
-      `;
-      document.querySelector('.modal .close').onclick = closeModal;
-      document.getElementById('resetBtn').onclick = function() {
-        if (confirm("Tem certeza que deseja resetar o sorteio?")) {
-          resetStorage();
-          closeModal();
-          fillSelect();
-        }
-      };
-    }
-    function closeModal() {
-      modalRoot.innerHTML = '';
-    }
+  jaSortearam.push(selecionado);
 
-    // Animação de entrada
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.querySelector('.card').style.boxShadow = '0 8px 32px 0 #3E2723bb';
-      }, 600);
-    });
-  </script>
+  localStorage.setItem("jaSortearam", JSON.stringify(jaSortearam));
+  localStorage.setItem("sorteio", JSON.stringify(sorteioFinal));
+}
+
+function abrirADM(){
+  const senha = prompt("Senha ADM:");
+
+  if(senha !== "1234") return;
+
+  let lista = participantes.map(nome=>{
+    return `${nome} → ${jaSortearam.includes(nome) ? "✅" : "⏳"}`;
+  }).join("\n");
+
+  alert(lista);
+}
+
+render();
+
+</script>
+
 </body>
 </html>
