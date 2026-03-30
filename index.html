@@ -1,3 +1,106 @@
+<!-- Código JavaScript movido para o final do body -->
+</div>
+
+<script>
+// --- BLOQUEIO DE ACESSO ÚNICO ---
+const LOCK_KEY = "amigoPascoaLock";
+const LOCK_TIMEOUT = 60 * 1000; // 1 minuto
+let lockInterval = null;
+
+function setLock() {
+  const now = Date.now();
+  localStorage.setItem(LOCK_KEY, JSON.stringify({ timestamp: now, id: myLockId }));
+}
+
+function getLock() {
+  const data = localStorage.getItem(LOCK_KEY);
+  if (!data) return null;
+  try { return JSON.parse(data); } catch { return null; }
+}
+
+function clearLock() {
+  const lock = getLock();
+  if (lock && lock.id === myLockId) {
+    localStorage.removeItem(LOCK_KEY);
+  }
+}
+
+function checkLock() {
+  const lock = getLock();
+  const now = Date.now();
+  if (!lock) return false;
+  if (now - lock.timestamp > LOCK_TIMEOUT) {
+    // Expirou
+    localStorage.removeItem(LOCK_KEY);
+    return false;
+  }
+  if (lock.id !== myLockId) return true;
+  return false;
+}
+
+function refreshLock() {
+  setLock();
+}
+
+function startLockInterval() {
+  lockInterval = setInterval(refreshLock, 20000); // Atualiza lock a cada 20s
+}
+
+function stopLockInterval() {
+  if (lockInterval) clearInterval(lockInterval);
+}
+
+// Gera um id único para esta aba
+const myLockId = Math.random().toString(36).substr(2) + Date.now();
+
+function showLockModal() {
+  const modal = document.createElement("div");
+  modal.innerHTML = `
+  <div style="
+    position:fixed;top:0;left:0;width:100vw;height:100vh;
+    background:rgba(46,27,22,0.97);z-index:99999;display:flex;align-items:center;justify-content:center;">
+    <div style="background:linear-gradient(135deg,#4E342E 80%,#FFD700 120%);padding:32px 24px;border-radius:20px;box-shadow:0 0 30px #FFD70099;text-align:center;max-width:90vw;">
+      <h2 style="color:#FFD700;font-size:1.3em;margin-bottom:18px;">Aguarde um momento</h2>
+      <div style="color:#EFEBE9;font-size:1.1em;">Outra pessoa está finalizando o sorteio.<br>Por favor, tente novamente em até 1 minuto.</div>
+    </div>
+  </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+// Ao abrir a página, verifica o lock
+window.addEventListener('DOMContentLoaded', () => {
+  const lock = getLock();
+  const now = Date.now();
+  // Se o lock for do próprio usuário, ignora e renova
+  if (lock && lock.id === myLockId) {
+    setLock();
+    startLockInterval();
+    return;
+  }
+  // Se o lock for de outro usuário e ainda válido, bloqueia
+  if (lock && lock.id !== myLockId && now - lock.timestamp <= LOCK_TIMEOUT) {
+    showLockModal();
+    return;
+  }
+  // Se não há lock ou lock expirou, assume o lock
+  setLock();
+  startLockInterval();
+});
+
+// Ao fechar a aba, libera o lock
+window.addEventListener('beforeunload', () => {
+  clearLock();
+  stopLockInterval();
+});
+
+// Se outro usuário pegar o lock, mostra modal imediatamente
+window.addEventListener('storage', (e) => {
+  if (e.key === LOCK_KEY && checkLock()) {
+    showLockModal();
+  }
+});
+</script>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -30,11 +133,11 @@ body{
 .container{
   width:95%;
   max-width:420px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(46,27,22,0.92);
   backdrop-filter: blur(15px);
   border-radius:20px;
   padding:25px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+  box-shadow:0 10px 40px #4E342E99;
 }
 
 h1{
@@ -57,7 +160,7 @@ h1{
   padding:12px;
   margin:6px 0;
   border-radius:12px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(141,110,99,0.13);
   cursor:pointer;
   transition:0.3s;
 }
@@ -68,8 +171,8 @@ h1{
 }
 
 .selected{
-  background: linear-gradient(45deg,var(--gold),#ffea70);
-  color:#000;
+  background: linear-gradient(45deg,var(--gold),#FFD700cc);
+  color:var(--choco-dark);
   font-weight:bold;
   box-shadow:0 0 15px var(--gold);
 }
@@ -118,13 +221,14 @@ button:hover{
 
 <h1>🍫 Amigo Secreto Ovos de Páscoa</h1>
 <div class="sub">Escolha seu nome</div>
+<div id="contadores" style="text-align:center;margin-bottom:10px;font-size:1.08em;color:#FFD700;font-weight:600;"></div>
 
 <div style="position:relative;max-width:340px;margin:0 auto;">
-  <button id="abrirListaBtn" type="button" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-size:1.1em;background:rgba(255,255,255,0.08);border-radius:14px;border:none;box-shadow:0 2px 8px #2E1B1633;cursor:pointer;color:#FFD700;font-family:inherit;outline:none;transition:box-shadow 0.2s;">
+  <button id="abrirListaBtn" type="button" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-size:1.1em;background:rgba(141,110,99,0.13);border-radius:14px;border:none;box-shadow:0 2px 8px #4E342E33;cursor:pointer;color:#FFD700;font-family:inherit;outline:none;transition:box-shadow 0.2s;">
     <span id="nomeSelecionado">Selecione seu nome</span>
     <span style="font-size:1.3em;transition:transform 0.3s;" id="setaLista">▼</span>
   </button>
-  <div class="lista" id="lista" style="display:none;position:absolute;top:110%;left:0;width:100%;background:rgba(46,27,22,0.98);border-radius:16px;box-shadow:0 8px 32px #2E1B16cc;z-index:10;max-height:320px;overflow:auto;padding:8px 0;"></div>
+  <div class="lista" id="lista" style="display:none;position:absolute;top:110%;left:0;width:100%;background:rgba(46,27,22,0.98);border-radius:16px;box-shadow:0 8px 32px #4E342Ecc;z-index:10;max-height:320px;overflow:auto;padding:8px 0;"></div>
 </div>
 <button onclick="sortear()">Sortear 🍫</button>
 <div class="result" id="resultado"></div>
@@ -163,6 +267,12 @@ const restricoes = {
 
 let selecionado = null;
 let listaAberta = false;
+function atualizarContadores() {
+  const total = participantes.length;
+  const concluidos = jaSortearam.length;
+  const faltam = total - concluidos;
+  document.getElementById('contadores').innerHTML = `Já sortearam: <span style="color:#EFEBE9">${concluidos}</span> &nbsp; | &nbsp; Faltam: <span style="color:#EFEBE9">${faltam}</span>`;
+}
 let sorteioFinal = JSON.parse(localStorage.getItem("sorteio")) || gerarSorteio();
 let jaSortearam = JSON.parse(localStorage.getItem("jaSortearam")) || [];
 let resultadosSorteio = JSON.parse(localStorage.getItem("resultadosSorteio")) || {};
@@ -173,7 +283,8 @@ function render(){
 
   const listaDiv = document.getElementById("lista");
   listaDiv.innerHTML = "";
-  participantes.sort().forEach(nome=>{
+  // Só mostra quem ainda não sorteou
+  participantes.filter(nome => !jaSortearam.includes(nome)).sort().forEach(nome=>{
     const div = document.createElement("div");
     div.className = "nome";
     div.innerText = nome;
@@ -196,6 +307,7 @@ function render(){
     };
     listaDiv.appendChild(div);
   });
+  atualizarContadores();
 }
 // Lógica para abrir/fechar lista premium
 document.getElementById('abrirListaBtn').onclick = function(){
@@ -261,6 +373,11 @@ function sortear(){
   localStorage.setItem("jaSortearam", JSON.stringify(jaSortearam));
   localStorage.setItem("sorteio", JSON.stringify(sorteioFinal));
   localStorage.setItem("resultadosSorteio", JSON.stringify(resultadosSorteio));
+
+  // Remove o nome da lista e atualiza contadores
+  selecionado = null;
+  document.getElementById('nomeSelecionado').innerText = 'Selecione seu nome';
+  render();
 }
 
 function confete(){
@@ -269,13 +386,13 @@ function confete(){
     div.style.position="fixed";
     div.style.width="8px";
     div.style.height="8px";
-    div.style.background="gold";
+    div.style.background="#FFD700";
     div.style.top=Math.random()*100+"%";
     div.style.left=Math.random()*100+"%";
     div.style.zIndex="999";
     div.style.borderRadius="50%";
     div.style.opacity = 0.85;
-    div.style.boxShadow = "0 0 8px #FFD700, 0 0 2px #fff";
+    div.style.boxShadow = "0 0 8px #FFD700, 0 0 2px #EFEBE9";
     div.style.transition = "transform 2s cubic-bezier(.2,1.2,.4,1), opacity 2s";
     setTimeout(()=>{
       div.style.transform = `translateY(${60+Math.random()*40}vh) scale(${0.7+Math.random()*0.6}) rotate(${Math.random()*360}deg)`;
@@ -294,7 +411,7 @@ function mostrarModal(nome){
     top:0;left:0;
     width:100vw;
     height:100vh;
-    background:rgba(0,0,0,0.85);
+    background:rgba(46,27,22,0.97);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -307,14 +424,14 @@ function mostrarModal(nome){
       border-radius:24px;
       text-align:center;
       color:#EFEBE9;
-      box-shadow:0 0 40px 0 #FFD70099, 0 8px 32px #2E1B16cc;
+      box-shadow:0 0 40px 0 #FFD70099, 0 8px 32px #4E342Ecc;
       min-width:240px;
       max-width:90vw;
       animation:popIn 0.6s cubic-bezier(.4,1.4,.6,1);
       position:relative;
     ">
-      <h2 style="font-family:'Playfair Display',serif;font-size:1.3em;color:#FFD700;text-shadow:0 0 12px #FFD70099,0 2px 8px #2E1B16;">🎁 Você tirou:</h2>
-      <h1 style="color:#FFD700;font-size:2.3em;letter-spacing:0.02em;text-shadow:0 0 18px #FFD700,0 2px 12px #2E1B16;font-family:'Playfair Display',serif;animation:shine 2s infinite alternate;">${nome}</h1>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.3em;color:#FFD700;text-shadow:0 0 12px #FFD70099,0 2px 8px #4E342E;">🎁 Você tirou:</h2>
+      <h1 style="color:#FFD700;font-size:2.3em;letter-spacing:0.02em;text-shadow:0 0 18px #FFD700,0 2px 12px #4E342E;font-family:'Playfair Display',serif;animation:shine 2s infinite alternate;">${nome}</h1>
       <button onclick="location.reload()" style="
         padding:12px 32px;
         margin-top:24px;
@@ -354,6 +471,7 @@ function abrirADM(){
 }
 
 render();
+atualizarContadores();
 
 </script>
 
